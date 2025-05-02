@@ -7,6 +7,7 @@ const App = () => {
     InProgress: [],
     Completed: []
   });
+  const [value,setValue] = useState('');
 
   const [tasks,setTasks] = useState([
     { id: '1', content: 'task-1', status: 'todo' },
@@ -18,9 +19,15 @@ const App = () => {
     { id: '7', content: 'task-7', status: 'Completed' },
   ]);
 
-  function addTask(){
-    const newTask = {id:tasks.length(), content:value, status:"todo"};
-    setTasks([...tasks,newTask])
+  function addTask() {
+    if (!value.trim()) return; // Prevent empty tasks
+    const newTask = {
+      id: Date.now().toString(), // Better unique ID
+      content: value,
+      status: "todo"
+    };
+    setTasks([...tasks, newTask]);
+    setValue(''); // Clear input
   }
 
   // Initialize columns
@@ -74,14 +81,13 @@ const App = () => {
     }));
   };
 
-  const [value,setValue] = useState('');
 
   return (
     <>
     <div className='w-dvw mt-3 flex justify-center space-x-7'>
-      <input onChange={(e)=>setValue(e.target.value)} type="text" className='rounded-md px-3 shadow-lg shadow-gray-300 active:-translate-1 outline-0' placeholder='Task...'/>
+      <input value={value} onKeyDown={(e)=>e.key==="Enter" && addTask()} onChange={(e)=>setValue(e.target.value)} type="text" className='rounded-md px-3 shadow-lg shadow-gray-300 active:-translate-1 outline-0' placeholder='Task...'/>
       <button 
-        onClick={()=>{addTask()}}
+        onClick={addTask}
         className='
           px-4 py-2
           bg-black
